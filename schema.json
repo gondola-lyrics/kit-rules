@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:gondola-lyrics:kit-rules:v1",
+  "title": "kit-rules rule set",
+  "description": "Shared rule data for language-specific kits. Apply the same normalization to input text and rule words while preserving source credit labels and names. Consumers check unique group IDs and normalized alias conflicts, and perform model changes. Node kits may statically import the JSON with Vite.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "version", "language", "normalization", "groups"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "../schema.json",
+      "description": "Relative reference to the shared repository schema."
+    },
+    "version": {
+      "type": "integer",
+      "const": 1,
+      "description": "Rule format version. Consumers accept only versions they support."
+    },
+    "language": {
+      "type": "string",
+      "pattern": "^[a-z]{2,8}(-[a-z0-9]{1,8})*$",
+      "description": "Lowercase text language tag. Use the same tag in the corresponding filename.",
+      "examples": ["zh-hans", "en"]
+    },
+    "normalization": {
+      "$ref": "#/$defs/normalization"
+    },
+    "groups": {
+      "type": "array",
+      "minItems": 1,
+      "description": "A file contains one group type. Preserve source group and word order. Consumers check that group IDs are unique within the file."
+    }
+  },
+  "oneOf": [
+    {
+      "title": "Credit rule file",
+      "description": "Split a full line at its first ASCII or fullwidth colon, then compare the normalized role label with normalized rule words for whole-string equality. Name separators are consumer options. A label without a valid name does not produce a credit.",
+      "type": "object",
+      "properties": {
+        "normalization": {
+          "type": "object",
+          "properties": {
+            "whitespace": {
+              "const": "remove"
+            }
+          }
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/creditGroup"
+          }
+        }
+      }
+    },
+    {
+      "title": "Filter rule file",
+      "description": "Categories and match conditions identify text. Consumer options decide whether to remove a lyric line.",
+      "type": "object",
+      "properties": {
+        "normalization": {
+          "type": "object",
+          "properties": {
+            "whitespace": {
+              "const": "collapse"
+            }
+          }
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/filterGroup"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "normalization": {
+      "title": "Match normalization",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["whitespace", "case"],
+      "description": "Normalize matching copies only. The whitespace set is U+0009..U+000D, U+0020, U+0085, U+00A0, U+1680, U+2000..U+200A, U+2028, U+2029, U+202F, U+205F, U+3000, and U+FEFF. All implementations process the same code points.",
+      "properties": {
+        "whitespace": {
+          "type": "string",
+          "enum": ["remove", "collapse"],
+          "description": "remove deletes every configured whitespace character. collapse replaces a whitespace run with one U+0020 and trims edge whitespace. Credit rules use remove; filter rules use collapse."
+        },
+        "case": {
+          "type": "string",
+          "const": "asciiLower",
+          "description": "Lowercase ASCII A through Z only. Preserve every other character and avoid platform-default locale rules."
+        }
+      }
+    },
+    "groupId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "description": "Stable group identifier using lowercase letters, digits, and hyphens."
+    },
+    "words": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "description": "Ordered literal words without duplicate items. Empty and whitespace-only words are invalid. Consumers check normalized aliases for conflicts across groups.",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "[^\\u0009-\\u000D\\u0020\\u0085\\u00A0\\u1680\\u2000-\\u200A\\u2028\\u2029\\u202F\\u205F\\u3000\\uFEFF]"
+      }
+    },
+    "creditRole": {
+      "type": "string",
+      "enum": ["OTHER", "LYRICIST", "COMPOSER", "ARRANGER", "PRODUCER", "PERFORMER", "MIXER", "MASTERING"],
+      "description": "Current model CreditRole symbol. Each implementation maps it explicitly instead of relying on enum numbers."
+    },
+    "creditGroup": {
+      "title": "Credit group",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "roles", "kind", "words"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/groupId"
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/creditRole"
+          },
+          "description": "A label may resolve to multiple roles, such as LYRICIST and COMPOSER for a combined credit."
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["role", "instrument"],
+          "description": "role identifies a credit responsibility; instrument identifies an instrument credit. Consumers perform metadata updates."
+        },
+        "words": {
+          "$ref": "#/$defs/words"
+        }
+      }
+    },
+    "filterMatch": {
+      "type": "string",
+      "enum": ["contains", "whole"],
+      "description": "contains finds any normalized rule word as a substring without word-boundary checks. whole requires the complete normalized text to equal a normalized rule word. Using whole for Cover does not match Discover."
+    },
+    "filterGroup": {
+      "title": "Filter group",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "category", "match", "words"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/groupId"
+        },
+        "category": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+          "description": "Identification category using lowercase letters, digits, and hyphens. The category does not prescribe a deletion action.",
+          "examples": ["copyright", "adaptation"]
+        },
+        "match": {
+          "$ref": "#/$defs/filterMatch"
+        },
+        "words": {
+          "$ref": "#/$defs/words"
+        }
+      }
+    }
+  }
+}
