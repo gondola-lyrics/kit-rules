@@ -1,0 +1,29 @@
+{
+  "$schema": "../schema.json",
+  "version": 1,
+  "language": "zh-hans",
+  "normalization": {
+    "whitespace": "remove",
+    "case": "asciiLower"
+  },
+  "groups": [
+    {
+      "id": "copyright-notice",
+      "category": "copyright",
+      "match": "contains",
+      "words": ["版权所有", "未经授权", "未经许可", "版权归原作者所有"]
+    },
+    {
+      "id": "copyright-label",
+      "category": "copyright",
+      "match": "whole",
+      "words": ["版权", "授权"]
+    },
+    {
+      "id": "adaptation-label",
+      "category": "adaptation",
+      "match": "whole",
+      "words": ["翻唱", "改编", "致敬"]
+    }
+  ]
+}

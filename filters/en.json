@@ -1,0 +1,29 @@
+{
+  "$schema": "../schema.json",
+  "version": 1,
+  "language": "en",
+  "normalization": {
+    "whitespace": "remove",
+    "case": "asciiLower"
+  },
+  "groups": [
+    {
+      "id": "copyright-notice",
+      "category": "copyright",
+      "match": "contains",
+      "words": ["Allrightsreserved", "Unauthorizedreproduction"]
+    },
+    {
+      "id": "copyright-label",
+      "category": "copyright",
+      "match": "whole",
+      "words": ["Copyright", "License"]
+    },
+    {
+      "id": "adaptation-label",
+      "category": "adaptation",
+      "match": "whole",
+      "words": ["Cover", "Adaptation", "Tribute", "Remake"]
+    }
+  ]
+}
