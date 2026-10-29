@@ -1,0 +1,14 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Scratch files and logs
+*.tmp
+*.bak
+*.swp
+*.log

@@ -1,0 +1,1 @@
+# @gondola-lyrics/kit-rules
