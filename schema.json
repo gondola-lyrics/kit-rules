@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:gondola-lyrics:kit-rules:v1",
   "title": "kit-rules rule set",
-  "description": "Shared rule data for language-specific kits. Apply the same normalization to input text and rule words while preserving source credit labels and names. Consumers check unique group IDs and normalized alias conflicts, and perform model changes. Node kits may statically import the JSON with Vite.",
+  "description": "Shared rule data for language-specific kits. Store rule words without configured whitespace. Consumers remove that whitespace from matching input and apply ASCII case normalization to both input and rule words while preserving source credit labels and names. Consumers check unique group IDs and alias conflicts, and perform model changes. Node kits may statically import the JSON with Vite.",
   "type": "object",
   "additionalProperties": false,
   "required": ["$schema", "version", "language", "normalization", "groups"],
@@ -35,7 +35,7 @@
   "oneOf": [
     {
       "title": "Credit rule file",
-      "description": "Split a full line at its first ASCII or fullwidth colon, then compare the normalized role label with normalized rule words for whole-string equality. Name separators are consumer options. A label without a valid name does not produce a credit.",
+      "description": "Split a full line at its first ASCII or fullwidth colon. Remove configured whitespace from the role-label copy, apply ASCII case normalization, and compare it with compact rule words for whole-string equality. Name separators are consumer options. Preserve source labels and names; a label without a valid name does not produce a credit.",
       "type": "object",
       "properties": {
         "normalization": {
@@ -56,14 +56,14 @@
     },
     {
       "title": "Filter rule file",
-      "description": "Categories and match conditions identify text. Consumer options decide whether to remove a lyric line.",
+      "description": "Remove configured whitespace from a matching-text copy before applying filter conditions. This makes separated and compact spellings equivalent. Categories identify text; consumer options decide whether to remove a lyric line.",
       "type": "object",
       "properties": {
         "normalization": {
           "type": "object",
           "properties": {
             "whitespace": {
-              "const": "collapse"
+              "const": "remove"
             }
           }
         },
@@ -82,12 +82,12 @@
       "type": "object",
       "additionalProperties": false,
       "required": ["whitespace", "case"],
-      "description": "Normalize matching copies only. The whitespace set is U+0009..U+000D, U+0020, U+0085, U+00A0, U+1680, U+2000..U+200A, U+2028, U+2029, U+202F, U+205F, U+3000, and U+FEFF. All implementations process the same code points.",
+      "description": "Normalize matching copies only; stored rule words contain no configured whitespace. The whitespace set is U+0009..U+000D, U+0020, U+0085, U+00A0, U+1680, U+2000..U+200A, U+2028, U+2029, U+202F, U+205F, U+3000, and U+FEFF. All implementations process the same code points.",
       "properties": {
         "whitespace": {
           "type": "string",
-          "enum": ["remove", "collapse"],
-          "description": "remove deletes every configured whitespace character. collapse replaces a whitespace run with one U+0020 and trims edge whitespace. Credit rules use remove; filter rules use collapse."
+          "const": "remove",
+          "description": "Remove every configured whitespace character from matching input. Both credit and filter rules use remove; preserve the original source text."
         },
         "case": {
           "type": "string",
@@ -105,11 +105,13 @@
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
-      "description": "Ordered literal words without duplicate items. Empty and whitespace-only words are invalid. Consumers check normalized aliases for conflicts across groups.",
+      "description": "Ordered compact literal words without duplicate items or configured whitespace. Consumers apply ASCII case normalization to stored words and check alias conflicts across groups.",
       "items": {
         "type": "string",
         "minLength": 1,
-        "pattern": "[^\\u0009-\\u000D\\u0020\\u0085\\u00A0\\u1680\\u2000-\\u200A\\u2028\\u2029\\u202F\\u205F\\u3000\\uFEFF]"
+        "not": {
+          "pattern": "[\\u0009-\\u000D\\u0020\\u0085\\u00A0\\u1680\\u2000-\\u200A\\u2028\\u2029\\u202F\\u205F\\u3000\\uFEFF]"
+        }
       }
     },
     "creditRole": {
@@ -148,7 +150,7 @@
     "filterMatch": {
       "type": "string",
       "enum": ["contains", "whole"],
-      "description": "contains finds any normalized rule word as a substring without word-boundary checks. whole requires the complete normalized text to equal a normalized rule word. Using whole for Cover does not match Discover."
+      "description": "contains finds any case-normalized rule word as a substring of whitespace-free matching text without word-boundary checks. whole requires the complete matching text to equal a rule word under the same case policy. Using whole for Cover does not match Discover."
     },
     "filterGroup": {
       "title": "Filter group",
