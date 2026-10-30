@@ -29,7 +29,7 @@
     "groups": {
       "type": "array",
       "minItems": 1,
-      "description": "A file contains one group type. Preserve source group and word order. Consumers check that group IDs are unique within the file."
+      "description": "A file contains one group type. Group and word order carry no matching priority; files keep groups in a fixed order and words sorted by normalized key for review. Consumers check that group IDs and normalized words are unique within the file."
     }
   },
   "oneOf": [
@@ -105,7 +105,7 @@
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
-      "description": "Ordered compact literal words without duplicate items or configured whitespace. Consumers apply ASCII case normalization to stored words and check alias conflicts across groups.",
+      "description": "Compact literal words without duplicate items or configured whitespace, sorted by normalized key. Consumers apply ASCII case normalization to stored words and check alias conflicts across groups.",
       "items": {
         "type": "string",
         "minLength": 1,
@@ -165,7 +165,7 @@
           "type": "string",
           "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
           "description": "Identification category using lowercase letters, digits, and hyphens. The category does not prescribe a deletion action.",
-          "examples": ["copyright", "adaptation"]
+          "examples": ["copyright", "adaptation", "disclaimer"]
         },
         "match": {
           "$ref": "#/$defs/filterMatch"
