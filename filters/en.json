@@ -11,7 +11,16 @@
       "id": "copyright-notice",
       "category": "copyright",
       "match": "contains",
-      "words": ["Allrightsreserved", "Unauthorizedreproduction"]
+      "words": [
+        "Allrightsofthe",
+        "Allrightsreserved",
+        "Nopartofthis",
+        "Unauthorizedcopying",
+        "Unauthorizedduplication",
+        "Unauthorizedreproduction",
+        "Unauthorizeduse",
+        "Underexclusivelicense"
+      ]
     },
     {
       "id": "copyright-label",
@@ -23,7 +32,13 @@
       "id": "adaptation-label",
       "category": "adaptation",
       "match": "whole",
-      "words": ["Cover", "Adaptation", "Tribute", "Remake"]
+      "words": ["Adaptation", "Cover", "Remake", "Tribute"]
+    },
+    {
+      "id": "disclaimer-notice",
+      "category": "disclaimer",
+      "match": "contains",
+      "words": ["Foreducationalpurposes", "Fornon-commercial", "Fornoncommercial"]
     }
   ]
 }
