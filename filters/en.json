@@ -12,14 +12,17 @@
       "category": "copyright",
       "match": "contains",
       "words": [
-        "Allrightsofthe",
         "Allrightsreserved",
+        "Allrightsofthe",
         "Nopartofthis",
-        "Unauthorizedcopying",
-        "Unauthorizedduplication",
         "Unauthorizedreproduction",
+        "Unauthorizedduplication",
+        "Unauthorizedcopying",
         "Unauthorizeduse",
-        "Underexclusivelicense"
+        "Underexclusivelicense",
+        "Allrightsreservedby",
+        "Anyunauthorizeduse",
+        "Usedbypermission"
       ]
     },
     {
@@ -32,13 +35,25 @@
       "id": "adaptation-label",
       "category": "adaptation",
       "match": "whole",
-      "words": ["Adaptation", "Cover", "Remake", "Tribute"]
+      "words": ["Cover", "Remake", "Tribute", "Adaptation"]
     },
     {
       "id": "disclaimer-notice",
       "category": "disclaimer",
       "match": "contains",
-      "words": ["Foreducationalpurposes", "Fornon-commercial", "Fornoncommercial"]
+      "words": ["Foreducationalpurposes", "Fornon-commercial", "Fornoncommercial", "Fornonprofitable", "Forpersonaluse", "Forpromotionalpurposes"]
+    },
+    {
+      "id": "organization-label",
+      "category": "organization",
+      "match": "contains",
+      "words": ["ManufacturingCompany", "RecordCompany", "RecordLabel", "Distribution"]
+    },
+    {
+      "id": "studio-label",
+      "category": "studio",
+      "match": "contains",
+      "words": ["RecordingStudio", "MasteringStudio", "Mixingstudio", "Mixstudio", "StudioPersonnel"]
     }
   ]
 }

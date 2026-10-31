@@ -11,13 +11,27 @@
       "id": "copyright-notice",
       "category": "copyright",
       "match": "contains",
-      "words": ["侵权必究", "保留所有权利", "未经授权", "未经许可", "版权属于", "版权归", "版权所有", "翻版必究", "违者必究"]
+      "words": [
+        "版权所有",
+        "保留所有权利",
+        "侵权必究",
+        "翻版必究",
+        "违者必究",
+        "未经授权",
+        "未经许可",
+        "版权归",
+        "版权属于",
+        "不得转载",
+        "严禁转载",
+        "盗版必究",
+        "禁止转载"
+      ]
     },
     {
       "id": "copyright-label",
       "category": "copyright",
       "match": "whole",
-      "words": ["授权", "版权"]
+      "words": ["版权", "授权"]
     },
     {
       "id": "adaptation-label",
@@ -29,7 +43,19 @@
       "id": "disclaimer-notice",
       "category": "disclaimer",
       "match": "contains",
-      "words": ["仅供个人", "仅供参考", "仅供学习"]
+      "words": ["仅供学习", "仅供个人", "仅供参考", "仅供交流", "禁止商业用途", "非商业用途"]
+    },
+    {
+      "id": "organization-label",
+      "category": "organization",
+      "match": "contains",
+      "words": ["唱片公司", "制作公司", "发行公司", "承办单位", "次级发行方", "厂牌"]
+    },
+    {
+      "id": "studio-label",
+      "category": "studio",
+      "match": "contains",
+      "words": ["录音室", "录音棚", "混音室", "混音工作室", "混音录音室", "母带录音室", "母带处理录音室"]
     }
   ]
 }
