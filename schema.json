@@ -29,7 +29,7 @@
     "groups": {
       "type": "array",
       "minItems": 1,
-      "description": "A file contains one group type. Group and word order carry no matching priority; files keep groups in a fixed order and words sorted by normalized key for review. Consumers check that group IDs and normalized words are unique within the file."
+      "description": "A file contains one group type. Groups keep a fixed order; words are ordered from high to low matching priority, so consumers may stop at the first word that matches. Consumers check that group IDs and normalized words are unique within the file."
     }
   },
   "oneOf": [
@@ -105,7 +105,7 @@
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
-      "description": "Compact literal words without duplicate items or configured whitespace, sorted by normalized key. Consumers apply ASCII case normalization to stored words and check alias conflicts across groups.",
+      "description": "Compact literal words without duplicate items or configured whitespace, ordered from high to low matching priority. Consumers apply ASCII case normalization to stored words and check alias conflicts across groups.",
       "items": {
         "type": "string",
         "minLength": 1,
